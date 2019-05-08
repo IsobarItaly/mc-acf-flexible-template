@@ -128,6 +128,22 @@ jQuery(document).ready(function($){
                                 // create object for use it later
                                 var newItem = $( value );
 
+                                /* START Isobar bugfix: remove duplicated template from generated content checking the template identifier */
+                                var hiddenFields = newItem.find('.acf-flexible-content > input:hidden');
+                                var hiddenFieldsByName = [];
+                                hiddenFields.each(function(index, input){
+                                    hiddenFieldsByName.push(input.name);
+                                });
+
+                                hiddenFieldsByName = $.unique(hiddenFieldsByName);
+                                $.each( hiddenFieldsByName, function( index, name ){
+                                    var inputsByName = newItem.find('input[name="'+ name +'"]');
+                                    if(inputsByName.length > 1){
+                                        $(inputsByName[0]).parent().remove();
+                                    }
+                                });
+                                /* END Isobar bugfix */
+
                                 // append to parent
                                 $( parentValues ).append( newItem );
                                 // this action set the field and render correctly tabs, etc.
